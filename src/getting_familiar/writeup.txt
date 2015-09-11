@@ -1,0 +1,5 @@
+rosbag:
+
+1. rosbag could be really great for replaying sensor input into different algorithms (or tweaks of the same algorithm) for comparisons and debugging when using a robot to debug is not feasible due to availability issues or time constraints (as rosbag can playback faster than real time)
+
+2. I ran into the unexpected (but in retrospect, rather expectable) complication that, when still connected to my neato, the rosback playback also moved the neato again in addition to playing back in rviz. That's something to be careful with. Also, as with any simulation, you are simply missing some of the elements of the complete physical system, which could potential cause you to overlook bugs.
