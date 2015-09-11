@@ -3,3 +3,16 @@ rosbag:
 1. rosbag could be really great for replaying sensor input into different algorithms (or tweaks of the same algorithm) for comparisons and debugging when using a robot to debug is not feasible due to availability issues or time constraints (as rosbag can playback faster than real time)
 
 2. I ran into the unexpected (but in retrospect, rather expectable) complication that, when still connected to my neato, the rosback playback also moved the neato again in addition to playing back in rviz. That's something to be careful with. Also, as with any simulation, you are simply missing some of the elements of the complete physical system, which could potential cause you to overlook bugs.
+
+tf:
+part 2:
+
+The behavior upon changing base frames makes sense- the base frame becomes the center of the coordinate system and all other frames are expressed relative to the base frame, so changing the base frame from odom to base_link centers rviz on the neato at all times instead of on the initial position of the neato.
+
+callbacks and threading:
+
+Adding a sleep to the listener delays its ability to respond to messages in a timely manner. While the talker publishes 10 times a second, the listener reads at once every 10 seconds. It does still get the messages in the correct order, so 10 seconds after it processes a message, it processes a new one send 100ms later. We can therefore assume that code in a callback will receive all messages in order, either as they come or as fast as the callback can process the messages.
+
+With queue size of 1 only 1 message is held on to so the listener just gets the most recent message every 10 seconds, and it misses all the messages in between. This allows us to only deal with the most recent message and is useful if we don't really care about history. There also may be sampling applications for which this is useful, if we want to do some complicated processing but don't need to do it on every message that gets sent. This is, however, really bad if we do need to process every single message.
+
+This means we definitely never want to write code that processes messages more slowly than they are being send, or we will never catch up (unless maybe we will eventually turn the robot off and we only actually need the messages for some post-analysis, but then we need enough memory to store all unprocessed messages)

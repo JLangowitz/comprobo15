@@ -1,22 +1,21 @@
-#!/usr/bin/env python
+#!usr/bin/env python
 
 """
-Node to publish Markers to a constant position (1,2,0) at 10 Hz
-Run with `rosrun getting_familiar marker_publisher.py`
+Node for publishing a sphere 1m in front of the neato
 """
 
 import rospy
 from visualization_msgs.msg import Marker
-from geometry_msgs.msg import Pose, Point, Vector3
+from geometry_msgs.msg import Pose, Point, Vector3, PointStamped
 from std_msgs.msg import ColorRGBA, Header
 
 rospy.init_node('marker_message');
 
 def main():
-    point = Point(x=1, y=2)
+    point = Point(x=1)
     pose = Pose(position=point)
     color = ColorRGBA(r=.4, g=0, b=.8, a=1.0)
-    header = Header(frame_id="odom")
+    header = Header(frame_id="base_link")
     scale = Vector3(x=.5, y=.5, z=.5)
     marker_msg = Marker(type=Marker.SPHERE, pose=pose, color=color, header=header, scale=scale)
 
